@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\DashboardAPI\V1'], function () {
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\DashboardAPI\V1', 'middleware' => 'auth:sanctum'], function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('posts', PostController::class);
 });

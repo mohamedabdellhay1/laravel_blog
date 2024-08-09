@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,4 +29,38 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+
+Route::get('/token', [TokenController::class, 'index'])->name('tokens');
+Route::get('/token/delete/{token}', [TokenController::class, 'delete'])->name('token.delete');
+Route::post('token/create', [TokenController::class, 'create'])->name('token.create');
+
+
+
+
+
+
+
+Route::get('/setup', function () {
+
+    if (Auth::user()->role != "super_admin") {
+        return abort(401);
+    }
+    // $tokens = DB::table('personal_access_tokens')->get();
+    // if ($tokens) {
+    //     return $tokens;
+    // }
+    $user = Auth::user();
+    $frontEndToken = $user->createToken('front-end-token');
+    return [
+        'front-end-token' => $frontEndToken->plainTextToken,
+        'test' => 'test'
+    ];
+
+
+
+
+})->middleware('auth');
+
+
+
+require __DIR__ . '/auth.php';
